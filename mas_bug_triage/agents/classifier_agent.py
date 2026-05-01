@@ -98,6 +98,6 @@ REPORTED_BY: <name or unknown>
         "agent_logs": state.get("agent_logs", []) + [log_entry],
     }
 
-    print(f"[INFO] Agent 1 completed | Severity: {severity.upper()} | {title}")
+    print(f"\n[OK] Agent 1 done - Severity: {severity.upper()} | {title}\n")
     
     return updated_state

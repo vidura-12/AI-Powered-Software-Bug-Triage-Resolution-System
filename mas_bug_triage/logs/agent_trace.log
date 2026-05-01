@@ -1,0 +1,10 @@
+2026-05-01 23:57:34,420 — [Agent1] Tool call: read_bug_report('sample_bug.txt')
+2026-05-01 23:57:34,421 — [Agent1] Tool output: 584 characters read
+2026-05-01 23:57:35,002 — [Agent1] LLM input sent — classifying bug report
+2026-05-02 00:00:32,997 — HTTP Request: POST http://127.0.0.1:11434/api/generate "HTTP/1.1 200 OK"
+2026-05-02 00:01:05,741 — [Agent1] LLM output:
+SEVERITY: CRITICAL
+TITLE: App crashes on login with special characters in password
+COMPONENT: Authentication Module
+REPORTED_BY: Ashan Fernando
+2026-05-02 00:01:05,753 — [Agent1] Completed | Severity: CRITICAL | App crashes on login with special characters in password

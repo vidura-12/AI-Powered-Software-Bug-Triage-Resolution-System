@@ -1,0 +1,16 @@
+Title: App crashes on login with special characters in password
+Reported by: Ashan Fernando
+Component: Authentication Module
+File: src/auth/login.py
+
+Description:
+When a user enters a password containing special characters such as @, #, or !,
+the application throws an unhandled exception and crashes entirely.
+This is reproducible 100% of the time. No error message is shown to the user.
+Steps to reproduce:
+1. Go to login page
+2. Enter any valid username
+3. Enter a password with @ or # character
+4. Click Login
+Expected: User logs in successfully
+Actual: App crashes with 500 error

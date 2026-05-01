@@ -1,0 +1,1 @@
+pip install langgraph langchain-community langchain-ollama

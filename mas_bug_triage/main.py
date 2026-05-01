@@ -1,5 +1,6 @@
 # main.py (your portion — teammates will add their nodes later)
-
+import sys
+sys.stdout.reconfigure(encoding='utf-8')
 from langgraph.graph import StateGraph, END
 from state.schema import BugTriageState
 from agents.classifier_agent import run_classifier_agent

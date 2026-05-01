@@ -3,6 +3,7 @@
 import logging
 import datetime
 from langchain_ollama import OllamaLLM
+from matplotlib.pyplot import title
 from tools.read_bug_report_tool import read_bug_report
 
 logging.basicConfig(
@@ -97,5 +98,6 @@ REPORTED_BY: <name or unknown>
         "agent_logs": state.get("agent_logs", []) + [log_entry],
     }
 
-    print(f"\n✅ Agent 1 done — Severity: {severity.upper()} | {title}\n")
+    print(f"[INFO] Agent 1 completed | Severity: {severity.upper()} | {title}")
+    
     return updated_state

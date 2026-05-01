@@ -1,1 +1,2 @@
 pip install langgraph langchain-community langchain-ollama
+python -m pip install pytest

@@ -1,0 +1,72 @@
+# ----------------------
+# Python
+# ----------------------
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+venv/
+.env/
+.venv/
+
+# ----------------------
+# Logs
+# ----------------------
+logs/
+*.log
+
+# ----------------------
+# Environment variables
+# ----------------------
+.env
+.env.*
+
+# ----------------------
+# IDE / Editor files
+# ----------------------
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# ----------------------
+# OS files
+# ----------------------
+.DS_Store
+Thumbs.db
+
+# ----------------------
+# Test / Coverage
+# ----------------------
+.pytest_cache/
+coverage/
+htmlcov/
+
+# ----------------------
+# Build / Distribution
+# ----------------------
+build/
+dist/
+*.egg-info/
+
+# ----------------------
+# Local LLM / Model files (IMPORTANT)
+# ----------------------
+*.bin
+*.gguf
+*.model
+
+# ----------------------
+# Database / temp files
+# ----------------------
+*.sqlite3
+*.db
+
+# ----------------------
+# Misc
+# ----------------------
+*.tmp
+*.bak

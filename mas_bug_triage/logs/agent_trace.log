@@ -11,3 +11,29 @@ REPORTED_BY: Ashan Fernando
 2026-05-02 00:42:38,383 — [Agent1] Tool output: 584 characters read
 2026-05-02 00:42:38,937 — [Agent1] LLM input sent — classifying bug report
 2026-05-02 00:42:39,969 — HTTP Request: POST http://127.0.0.1:11434/api/generate "HTTP/1.1 500 Internal Server Error"
+2026-05-02 00:50:37,336 — [Agent1] Tool call: read_bug_report('sample_bug.txt')
+2026-05-02 00:50:37,344 — [Agent1] Tool output: 584 characters read
+2026-05-02 00:50:37,892 — [Agent1] LLM input sent — classifying bug report
+2026-05-02 00:51:31,480 — HTTP Request: POST http://127.0.0.1:11434/api/generate "HTTP/1.1 200 OK"
+2026-05-02 00:51:42,801 — [Agent1] LLM output:
+SEVERITY: CRITICAL
+TITLE: App crashes on login with special characters in password
+COMPONENT: Authentication Module
+REPORTED_BY: Ashan Fernando
+2026-05-02 00:51:42,994 — [Agent2] Starting analysis for: App crashes on login with special characters in password
+2026-05-02 00:51:42,994 — [Agent2] Tool call: read_code_file('sample_bug.txt')
+2026-05-02 00:51:42,997 — [Agent2] Tool error: Unsupported file type '.txt'. Supported types: ('.py', '.js', '.ts', '.jsx', '.tsx')
+2026-05-02 01:03:42,966 — [Agent1] Tool call: read_bug_report('sample_bug.txt')
+2026-05-02 01:03:42,966 — [Agent1] Tool output: 584 characters read
+2026-05-02 01:03:43,502 — [Agent1] LLM input sent — classifying bug report
+2026-05-02 01:04:25,158 — HTTP Request: POST http://127.0.0.1:11434/api/generate "HTTP/1.1 200 OK"
+2026-05-02 01:04:33,347 — [Agent1] LLM output:
+SEVERITY: CRITICAL
+TITLE: App crashes on login with special characters in password
+COMPONENT: Authentication Module
+REPORTED_BY: Ashan Fernando
+2026-05-02 01:04:33,451 — [Agent2] Starting analysis for: App crashes on login with special characters in password
+2026-05-02 01:04:33,451 — [Agent2] Tool call: read_code_file('sample_code/buggy_app.py')
+2026-05-02 01:04:33,456 — [Agent2] Tool output: 824 characters read
+2026-05-02 01:04:34,170 — [Agent2] LLM input sent — analysing source code
+2026-05-02 01:04:34,224 — HTTP Request: POST http://127.0.0.1:11434/api/generate "HTTP/1.1 404 Not Found"

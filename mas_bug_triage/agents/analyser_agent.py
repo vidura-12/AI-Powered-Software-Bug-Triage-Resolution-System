@@ -16,13 +16,13 @@ def run_analyser_agent(state: dict) -> dict:
     """
     Agent 2: Code Analyser
 
-    Takes the file path from the shared state (set by Agent 1), reads
-    the relevant source code using read_code_file tool, then uses the
-    local LLM to identify the root cause of the classified bug.
+    Takes the code file path from the shared state, reads the relevant
+    source code using read_code_file tool, then uses the local LLM to
+    identify the root cause of the classified bug.
 
     Args:
         state (dict): The shared global state. Must contain:
-                      - 'bug_file_path' (str): path to the source code file
+                      - 'code_file_path' (str): path to the source code file
                       - 'bug_title' (str): bug title from Agent 1
                       - 'severity' (str): severity level from Agent 1
                       - 'affected_component' (str): component from Agent 1
@@ -33,7 +33,10 @@ def run_analyser_agent(state: dict) -> dict:
     """
 
     # --- Step 1: Get values from shared state (set by Agent 1) ---
-    file_path: str = state.get("bug_file_path", "")
+    # Use code_file_path for the actual source code file
+    # Fall back to sample_code/buggy_app.py if not set
+    file_path: str = state.get("code_file_path", "sample_code/buggy_app.py")
+
     bug_title: str = state.get("bug_title", "Unknown bug")
     severity: str = state.get("severity", "unknown")
     component: str = state.get("affected_component", "unknown")
@@ -52,6 +55,9 @@ def run_analyser_agent(state: dict) -> dict:
         return {
             **state,
             "root_cause": f"ERROR: Could not read source file — {error_msg}",
+            "buggy_lines": "",
+            "confidence": "",
+            "code_content": "",
             "agent_logs": state.get("agent_logs", []) + [
                 f"[Agent2 — {datetime.datetime.now().isoformat()}] "
                 f"FAILED — {error_msg}"
@@ -85,7 +91,7 @@ CONFIDENCE: <high|medium|low>
     )
 
     # --- Step 4: Call the local LLM ---
-    llm = OllamaLLM(model="llama3:8b")
+    llm = OllamaLLM(model="phi3:mini")   # phi3:mini fits in low RAM machines
     logging.info(f"[Agent2] LLM input sent — analysing source code")
 
     llm_output: str = llm.invoke(system_prompt + "\n" + user_message)

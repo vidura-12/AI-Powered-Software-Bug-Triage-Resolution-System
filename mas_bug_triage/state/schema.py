@@ -15,7 +15,8 @@ class BugTriageState(TypedDict):
     root_cause:         Optional[str] # root cause identified in source code
     buggy_lines:        str           # e.g. "5, 12" — line numbers of the bug
     confidence:         str           # "high", "medium", or "low"
-    code_content:       str           # numbered source code that was read
+    code_content:       str 
+    code_file_path:     str           # numbered source code that was read
 
     # --- Agent 3 fills these (fix_agent) ---
     suggested_fix:      Optional[str]

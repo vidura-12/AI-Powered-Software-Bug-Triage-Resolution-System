@@ -1,94 +1,129 @@
-# agents/agent2_analyser.py
+# agents/analyser_agent.py
 
-import json
+import logging
 import datetime
-from langchain_community.llms import Ollama
-from tools.tool2_read_code import read_code_file_tool
+from langchain_ollama import OllamaLLM
+from tools.read_code_file_tool import read_code_file
+
+logging.basicConfig(
+    filename="logs/agent_trace.log",
+    level=logging.INFO,
+    format="%(asctime)s — %(message)s"
+)
 
 
-def run_code_analyser_agent(state: dict) -> dict:
+def run_analyser_agent(state: dict) -> dict:
     """
-    Code Analyser Agent — Student 2.
+    Agent 2: Code Analyser
 
-    Reads the relevant source code file identified in the bug report,
-    analyses it using a local LLM, and updates the shared state with
-    a root cause analysis.
+    Takes the file path from the shared state (set by Agent 1), reads
+    the relevant source code using read_code_file tool, then uses the
+    local LLM to identify the root cause of the classified bug.
 
     Args:
-        state (dict): The shared global state dictionary. Must contain:
-                      - 'file_path' (str): path to the code file to analyse
-                      - 'bug_description' (str): the bug description from Agent 1
+        state (dict): The shared global state. Must contain:
+                      - 'bug_file_path' (str): path to the source code file
+                      - 'bug_title' (str): bug title from Agent 1
                       - 'severity' (str): severity level from Agent 1
-                      - 'log_trail' (list): running log of all agent actions
+                      - 'affected_component' (str): component from Agent 1
+                      - 'agent_logs' (list): running log trail
 
     Returns:
-        dict: Updated state with 'root_cause' key added.
+        dict: Updated state with 'root_cause' and appended agent_logs entry.
     """
 
-    print("\n[Agent 2 - Code Analyser] Starting analysis...")
-
-    # ── 1. Read the code file using our custom tool ──────────────────
-    file_path: str = state.get("file_path", "")
-    bug_description: str = state.get("bug_description", "No description provided.")
+    # --- Step 1: Get values from shared state (set by Agent 1) ---
+    file_path: str = state.get("bug_file_path", "")
+    bug_title: str = state.get("bug_title", "Unknown bug")
     severity: str = state.get("severity", "unknown")
+    component: str = state.get("affected_component", "unknown")
+    raw_bug_report: str = state.get("raw_bug_report", "")
 
-    if not file_path:
-        state["root_cause"] = "ERROR: No file path provided in state."
-        return state
+    logging.info(f"[Agent2] Starting analysis for: {bug_title}")
+    logging.info(f"[Agent2] Tool call: read_code_file('{file_path}')")
 
-    code_content: str = read_code_file_tool(file_path)
+    # --- Step 2: Use the tool to read the source code file ---
+    try:
+        code_content: str = read_code_file(file_path)
+        logging.info(f"[Agent2] Tool output: {len(code_content)} characters read")
+    except (FileNotFoundError, ValueError, PermissionError, RuntimeError) as e:
+        error_msg = str(e)
+        logging.error(f"[Agent2] Tool error: {error_msg}")
+        return {
+            **state,
+            "root_cause": f"ERROR: Could not read source file — {error_msg}",
+            "agent_logs": state.get("agent_logs", []) + [
+                f"[Agent2 — {datetime.datetime.now().isoformat()}] "
+                f"FAILED — {error_msg}"
+            ],
+        }
 
-    # ── 2. Build the prompt for the local LLM ────────────────────────
-    prompt = f"""You are an expert software debugger. Your ONLY job is to analyse 
-source code and identify the root cause of a reported bug.
+    # --- Step 3: Build the system prompt ---
+    system_prompt = """
+You are an expert software debugger. Your ONLY job is to analyse source code
+and identify the root cause of a reported bug. You must be precise.
 
-Bug Report:
-- Severity: {severity}
-- Description: {bug_description}
+Rules:
+- Reference the EXACT line number(s) where the bug originates.
+- Do NOT suggest a fix — only identify the root cause.
+- Be concise: 3 to 5 sentences maximum.
+- If you cannot find the cause in the code, say "Root cause not found in provided code."
+- Respond ONLY in this exact format, nothing else:
 
-Source Code (with line numbers):
-{code_content}
+ROOT_CAUSE: <your analysis here referencing line numbers>
+BUGGY_LINES: <comma-separated line numbers e.g. 5, 12>
+CONFIDENCE: <high|medium|low>
+"""
 
-Instructions:
-1. Read the code carefully.
-2. Identify the EXACT root cause of the bug described above.
-3. Reference the specific line number(s) where the bug exists.
-4. Be concise. Your answer must be 3-5 sentences maximum.
-5. Do NOT suggest a fix yet — only identify the root cause.
+    user_message = (
+        f"Bug Report Summary:\n"
+        f"- Title: {bug_title}\n"
+        f"- Severity: {severity}\n"
+        f"- Affected Component: {component}\n"
+        f"- Description: {raw_bug_report}\n\n"
+        f"Source Code to Analyse:\n{code_content}"
+    )
 
-Root Cause Analysis:"""
+    # --- Step 4: Call the local LLM ---
+    llm = OllamaLLM(model="llama3:8b")
+    logging.info(f"[Agent2] LLM input sent — analysing source code")
 
-    # ── 3. Call the local Ollama model ───────────────────────────────
-    llm = Ollama(model="llama3:8b", temperature=0)
-    root_cause: str = llm.invoke(prompt)
+    llm_output: str = llm.invoke(system_prompt + "\n" + user_message)
+    logging.info(f"[Agent2] LLM output:\n{llm_output}")
 
-    # ── 4. Log this agent's activity ─────────────────────────────────
-    log_entry = {
-        "agent": "Agent 2 - Code Analyser",
-        "timestamp": datetime.datetime.now().isoformat(),
-        "input": {
-            "file_path": file_path,
-            "bug_description": bug_description,
-            "severity": severity,
-        },
-        "tool_used": "read_code_file_tool",
-        "tool_input": file_path,
-        "tool_output_length": len(code_content),
-        "output": root_cause.strip(),
+    # --- Step 5: Parse the LLM output ---
+    root_cause = "unknown"
+    buggy_lines = "unknown"
+    confidence = "low"
+
+    for line in llm_output.strip().splitlines():
+        line = line.strip()
+        if line.startswith("ROOT_CAUSE:"):
+            root_cause = line.replace("ROOT_CAUSE:", "").strip()
+        elif line.startswith("BUGGY_LINES:"):
+            buggy_lines = line.replace("BUGGY_LINES:", "").strip()
+        elif line.startswith("CONFIDENCE:"):
+            val = line.replace("CONFIDENCE:", "").strip().lower()
+            if val in ["high", "medium", "low"]:
+                confidence = val
+
+    # --- Step 6: Update shared state ---
+    log_entry = (
+        f"[Agent2 — {datetime.datetime.now().isoformat()}] "
+        f"Root cause identified (confidence: {confidence}) | "
+        f"Buggy lines: {buggy_lines}"
+    )
+
+    updated_state = {
+        **state,
+        "root_cause": root_cause,
+        "buggy_lines": buggy_lines,
+        "confidence": confidence,
+        "code_content": code_content,
+        "agent_logs": state.get("agent_logs", []) + [log_entry],
     }
 
-    # Append to the shared log trail
-    state["log_trail"].append(log_entry)
+    print(f"\n[OK] Agent 2 done — Root cause found (confidence: {confidence})")
+    print(f"     Buggy lines: {buggy_lines}\n")
 
-    # Also write to the logs/ folder
-    with open("logs/agent2_log.json", "a", encoding="utf-8") as f:
-        f.write(json.dumps(log_entry, indent=2) + "\n")
-
-    # ── 5. Update global state ────────────────────────────────────────
-    state["root_cause"] = root_cause.strip()
-    state["code_content"] = code_content  # pass code forward if Agent 3 needs it
-
-    print(f"[Agent 2 - Code Analyser] Done. Root cause identified.")
-    print(f"  → {root_cause.strip()[:120]}...")
-
-    return state
+    return updated_state

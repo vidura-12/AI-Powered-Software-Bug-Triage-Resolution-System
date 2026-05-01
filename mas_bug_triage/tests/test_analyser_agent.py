@@ -1,96 +1,161 @@
-# tests/test_agent2.py
+# tests/test_analyser_agent.py
 
-import os
 import pytest
-from tools.tool2_read_code import read_code_file_tool
+import os
+import sys
+
+# Make sure imports work from project root
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
+from tools.read_code_file_tool import read_code_file
 
 
-# ── Tests for the Tool ────────────────────────────────────────────────
+# ══════════════════════════════════════════════════════════════════════
+#  TOOL TESTS — read_code_file_tool
+# ══════════════════════════════════════════════════════════════════════
 
 class TestReadCodeFileTool:
 
     def test_reads_valid_python_file(self, tmp_path):
-        """Tool should read a .py file and return numbered lines."""
+        """Tool must read a .py file and return content with line numbers."""
         sample = tmp_path / "sample.py"
         sample.write_text("def hello():\n    return 'world'\n")
 
-        result = read_code_file_tool(str(sample))
+        result = read_code_file(str(sample))
 
         assert "1 |" in result
         assert "def hello" in result
         assert "2 |" in result
 
     def test_line_numbers_are_sequential(self, tmp_path):
-        """Each line should have a correct sequential number."""
+        """Every line must have a correct sequential number."""
         sample = tmp_path / "code.py"
         sample.write_text("a = 1\nb = 2\nc = 3\n")
 
-        result = read_code_file_tool(str(sample))
+        result = read_code_file(str(sample))
         lines = result.strip().split("\n")
 
         assert "1 |" in lines[0]
         assert "2 |" in lines[1]
         assert "3 |" in lines[2]
 
-    def test_file_not_found_returns_error(self):
-        """Should return an error string when file doesn't exist."""
-        result = read_code_file_tool("nonexistent/path/file.py")
-        assert result.startswith("ERROR:")
-        assert "not found" in result.lower()
+    def test_file_not_found_raises_error(self):
+        """Must raise FileNotFoundError when file doesn't exist."""
+        with pytest.raises(FileNotFoundError) as exc_info:
+            read_code_file("nonexistent/path/file.py")
+        assert "not found" in str(exc_info.value).lower()
 
-    def test_unsupported_extension_returns_error(self, tmp_path):
-        """Should reject non-Python/JS files."""
+    def test_unsupported_extension_raises_error(self, tmp_path):
+        """Must raise ValueError for non-code file types."""
         bad_file = tmp_path / "document.pdf"
         bad_file.write_text("some content")
 
-        result = read_code_file_tool(str(bad_file))
-        assert result.startswith("ERROR:")
-        assert "Unsupported" in result
+        with pytest.raises(ValueError) as exc_info:
+            read_code_file(str(bad_file))
+        assert "Unsupported" in str(exc_info.value)
 
     def test_reads_javascript_file(self, tmp_path):
-        """Tool should also handle .js files."""
+        """Tool must also handle .js files correctly."""
         js_file = tmp_path / "app.js"
         js_file.write_text("function greet() {\n  console.log('hi');\n}\n")
 
-        result = read_code_file_tool(str(js_file))
+        result = read_code_file(str(js_file))
+
         assert "1 |" in result
         assert "function greet" in result
 
-    def test_empty_file_returns_empty_content(self, tmp_path):
-        """Empty file should return empty string (no errors)."""
+    def test_empty_file_returns_empty_string(self, tmp_path):
+        """Empty file must return empty string with no errors."""
         empty = tmp_path / "empty.py"
         empty.write_text("")
-        result = read_code_file_tool(str(empty))
-        assert "ERROR" not in result
+
+        result = read_code_file(str(empty))
+        assert result == ""
+
+    def test_multiline_file_has_correct_count(self, tmp_path):
+        """Number of numbered lines must match number of actual lines."""
+        code = "line1\nline2\nline3\nline4\nline5\n"
+        sample = tmp_path / "multi.py"
+        sample.write_text(code)
+
+        result = read_code_file(str(sample))
+        numbered_lines = [l for l in result.split("\n") if "|" in l]
+
+        assert len(numbered_lines) == 5
+
+    def test_content_is_preserved(self, tmp_path):
+        """Original code content must appear after the line number."""
+        sample = tmp_path / "app.py"
+        sample.write_text("x = 42\n")
+
+        result = read_code_file(str(sample))
+
+        assert "x = 42" in result
 
 
-# ── LLM-as-a-Judge Test for the Agent ────────────────────────────────
+# ══════════════════════════════════════════════════════════════════════
+#  AGENT STATE TESTS — run_analyser_agent (no LLM needed)
+# ══════════════════════════════════════════════════════════════════════
 
-def test_agent_output_contains_line_reference(tmp_path):
-    """
-    LLM-as-a-Judge style test: the root cause output from the agent
-    should mention a line number, proving it actually read the code.
-    This is a lightweight check — full LLM judge can be added later.
-    """
-    from agents.agent2_analyser import run_code_analyser_agent
+class TestAnalyserAgentState:
 
-    # Create a simple buggy Python file
-    buggy = tmp_path / "buggy.py"
-    buggy.write_text("def divide(a, b):\n    return a / b\n\nresult = divide(10, 0)\n")
+    def test_agent_fails_gracefully_on_missing_file(self):
+        """Agent must handle missing file and return error in root_cause."""
+        from agents.analyser_agent import run_analyser_agent
 
-    state = {
-        "file_path": str(buggy),
-        "bug_description": "ZeroDivisionError when b is 0",
-        "severity": "critical",
-        "log_trail": [],
-    }
+        state = {
+            "bug_file_path": "nonexistent/totally_fake.py",
+            "bug_title": "Test bug",
+            "severity": "minor",
+            "affected_component": "unknown",
+            "raw_bug_report": "Something broke",
+            "agent_logs": [],
+        }
 
-    updated_state = run_code_analyser_agent(state)
+        result = run_analyser_agent(state)
 
-    # The agent must have added a root_cause
-    assert "root_cause" in updated_state
-    assert len(updated_state["root_cause"]) > 10
+        # Must not crash — must return error message in root_cause
+        assert "root_cause" in result
+        assert "ERROR" in result["root_cause"]
 
-    # The log must have been updated
-    assert len(updated_state["log_trail"]) == 1
-    assert updated_state["log_trail"][0]["agent"] == "Agent 2 - Code Analyser"
+    def test_agent_appends_to_log_trail(self, tmp_path):
+        """Agent must always append exactly one entry to agent_logs."""
+        # We only test the tool + state flow without LLM here
+        # by checking that a bad file path still logs correctly
+        from agents.analyser_agent import run_analyser_agent
+
+        state = {
+            "bug_file_path": "bad_path.py",
+            "bug_title": "Test",
+            "severity": "major",
+            "affected_component": "API",
+            "raw_bug_report": "API fails",
+            "agent_logs": ["existing log from agent 1"],
+        }
+
+        result = run_analyser_agent(state)
+
+        # Log must grow by exactly 1
+        assert len(result["agent_logs"]) == 2
+        assert "Agent2" in result["agent_logs"][1]
+
+    def test_agent_preserves_existing_state_keys(self, tmp_path):
+        """Agent must not delete any keys that Agent 1 put in state."""
+        from agents.analyser_agent import run_analyser_agent
+
+        state = {
+            "bug_file_path": "bad_path.py",
+            "bug_title": "Login crash",
+            "severity": "critical",
+            "affected_component": "Auth",
+            "reported_by": "Ashan Fernando",
+            "raw_bug_report": "App crashes on login",
+            "agent_logs": [],
+        }
+
+        result = run_analyser_agent(state)
+
+        # All Agent 1 keys must still be present
+        assert result["bug_title"] == "Login crash"
+        assert result["severity"] == "critical"
+        assert result["reported_by"] == "Ashan Fernando"

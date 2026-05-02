@@ -91,7 +91,7 @@ CONFIDENCE: <high|medium|low>
     )
 
     # --- Step 4: Call the local LLM ---
-    llm = OllamaLLM(model="phi3:mini")   # phi3:mini fits in low RAM machines
+    llm = OllamaLLM(model="llama3:8b")   # phi3:mini fits in low RAM machines
     logging.info(f"[Agent2] LLM input sent — analysing source code")
 
     llm_output: str = llm.invoke(system_prompt + "\n" + user_message)

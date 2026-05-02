@@ -16,6 +16,9 @@ venv/
 logs/
 *.log
 
+# Ignore generated reports
+reports/
+
 # ----------------------
 # Environment variables
 # ----------------------

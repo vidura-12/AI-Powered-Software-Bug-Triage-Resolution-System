@@ -1,0 +1,270 @@
+2026-05-02 21:53:10,841 — [Agent1] Tool call: read_bug_report('sample_bug.txt')
+2026-05-02 21:53:10,841 — [Agent1] Tool output: 584 characters read
+2026-05-02 21:53:10,841 — [Agent1] LLM input sent — classifying bug report
+2026-05-02 21:53:10,841 — [Agent1] LLM output:
+SEVERITY: critical
+TITLE: App crashes on login with special characters in password
+COMPONENT: Authentication Module
+REPORTED_BY: Ashan Fernando
+2026-05-02 21:53:10,842 — [Agent2] Starting analysis for: App crashes on login with special characters in password
+2026-05-02 21:53:10,842 — [Agent2] Tool call: read_code_file('sample_code/buggy_app.py')
+2026-05-02 21:53:10,842 — [Agent2] Tool output: 824 characters read
+2026-05-02 21:53:10,843 — [Agent2] LLM input sent — analysing source code
+2026-05-02 21:53:10,843 — [Agent2] LLM output:
+ROOT_CAUSE: Crash occurs due to missing validation for special characters in password input (line 12)
+BUGGY_LINES: 12
+CONFIDENCE: high
+2026-05-02 21:53:10,843 — [Agent3] Received root cause: Crash occurs due to missing validation for special characters in password input (line 12)
+2026-05-02 21:53:10,843 — [Agent3] Tool call: search_local_docs('Crash occurs due to missing validation for special characters in password input (line 12)')
+2026-05-02 21:53:11,175 — [Agent3] Tool output: 0 matches found
+2026-05-02 21:53:11,175 — [Agent3] LLM input sent — generating fix
+2026-05-02 21:53:11,175 — [Agent3] LLM output:
+FIX:
+Add validation to sanitize special characters before processing login.
+
+CODE:
+if not password.isalnum():
+    raise ValueError("Invalid characters in password")
+
+2026-05-02 21:53:11,176 — [Reporter Agent] Started
+2026-05-02 21:53:11,176 — [Reporter Agent] Report saved to reports/bug_report_215311.md
+2026-05-02 22:19:45,322 — [Agent1] Tool call: read_bug_report('sample_bug.txt')
+2026-05-02 22:19:45,322 — [Agent1] Tool output: 584 characters read
+2026-05-02 22:19:45,322 — [Agent1] LLM input sent — classifying bug report
+2026-05-02 22:19:45,322 — [Agent1] LLM output:
+SEVERITY: critical
+TITLE: App crashes on login with special characters in password
+COMPONENT: Authentication Module
+REPORTED_BY: Ashan Fernando
+2026-05-02 22:19:45,323 — [Agent2] Starting analysis for: App crashes on login with special characters in password
+2026-05-02 22:19:45,323 — [Agent2] Tool call: read_code_file('sample_code/buggy_app.py')
+2026-05-02 22:19:45,323 — [Agent2] Tool output: 824 characters read
+2026-05-02 22:19:45,323 — [Agent2] LLM input sent — analysing source code
+2026-05-02 22:19:45,324 — [Agent2] LLM output:
+ROOT_CAUSE: Crash occurs due to missing validation for special characters in password input (line 12)
+BUGGY_LINES: 12
+CONFIDENCE: high
+2026-05-02 22:19:45,324 — [Agent3] Received root cause: Crash occurs due to missing validation for special characters in password input (line 12)
+2026-05-02 22:19:45,324 — [Agent3] Tool call: search_local_docs('Crash occurs due to missing validation for special characters in password input (line 12)')
+2026-05-02 22:19:45,565 — [Agent3] Tool output: 0 matches found
+2026-05-02 22:19:45,565 — [Agent3] LLM input sent — generating fix
+2026-05-02 22:19:45,565 — [Agent3] LLM output:
+FIX:
+Add validation to sanitize special characters before processing login.
+
+CODE:
+if not password.isalnum():
+    raise ValueError("Invalid characters in password")
+
+2026-05-02 22:19:45,565 — [Reporter Agent] Started
+2026-05-02 22:19:45,566 — [Reporter Agent] Report saved to reports/bug_report_221945.md
+2026-05-02 22:19:57,818 — [Agent1] Tool call: read_bug_report('sample_bug.txt')
+2026-05-02 22:19:57,819 — [Agent1] Tool output: 584 characters read
+2026-05-02 22:19:57,819 — [Agent1] LLM input sent — classifying bug report
+2026-05-02 22:19:57,819 — [Agent1] LLM output:
+SEVERITY: critical
+TITLE: App crashes on login with special characters in password
+COMPONENT: Authentication Module
+REPORTED_BY: Ashan Fernando
+2026-05-02 22:19:57,819 — [Agent2] Starting analysis for: App crashes on login with special characters in password
+2026-05-02 22:19:57,820 — [Agent2] Tool call: read_code_file('sample_code/buggy_app.py')
+2026-05-02 22:19:57,820 — [Agent2] Tool output: 824 characters read
+2026-05-02 22:19:57,820 — [Agent2] LLM input sent — analysing source code
+2026-05-02 22:19:57,820 — [Agent2] LLM output:
+ROOT_CAUSE: Crash occurs due to missing validation for special characters in password input (line 12)
+BUGGY_LINES: 12
+CONFIDENCE: high
+2026-05-02 22:19:57,821 — [Agent3] Received root cause: Crash occurs due to missing validation for special characters in password input (line 12)
+2026-05-02 22:19:57,821 — [Agent3] Tool call: search_local_docs('Crash occurs due to missing validation for special characters in password input (line 12)')
+2026-05-02 22:19:57,959 — [Agent3] Tool output: 0 matches found
+2026-05-02 22:19:57,959 — [Agent3] LLM input sent — generating fix
+2026-05-02 22:19:57,959 — [Agent3] LLM output:
+FIX:
+Add validation to sanitize special characters before processing login.
+
+CODE:
+if not password.isalnum():
+    raise ValueError("Invalid characters in password")
+
+2026-05-02 22:19:57,959 — [Reporter Agent] Started
+2026-05-02 22:19:57,960 — [Reporter Agent] Report saved to reports/bug_report_221957.md
+2026-05-02 22:22:16,271 — [Agent1] Tool call: read_bug_report('sample_bug.txt')
+2026-05-02 22:22:16,272 — [Agent1] Tool output: 584 characters read
+2026-05-02 22:22:16,272 — [Agent1] LLM input sent — classifying bug report
+2026-05-02 22:22:16,272 — [Agent1] LLM output:
+SEVERITY: critical
+TITLE: App crashes on login with special characters in password
+COMPONENT: Authentication Module
+REPORTED_BY: Ashan Fernando
+2026-05-02 22:22:16,272 — [Agent2] Starting analysis for: App crashes on login with special characters in password
+2026-05-02 22:22:16,272 — [Agent2] Tool call: read_code_file('sample_code/buggy_app.py')
+2026-05-02 22:22:16,272 — [Agent2] Tool output: 824 characters read
+2026-05-02 22:22:16,273 — [Agent2] LLM input sent — analysing source code
+2026-05-02 22:22:16,273 — [Agent2] LLM output:
+ROOT_CAUSE: Crash occurs due to missing validation for special characters in password input (line 12)
+BUGGY_LINES: 12
+CONFIDENCE: high
+2026-05-02 22:22:16,273 — [Agent3] Received root cause: Crash occurs due to missing validation for special characters in password input (line 12)
+2026-05-02 22:22:16,273 — [Agent3] Tool call: search_local_docs('Crash occurs due to missing validation for special characters in password input (line 12)')
+2026-05-02 22:22:16,408 — [Agent3] Tool output: 0 matches found
+2026-05-02 22:22:16,408 — [Agent3] LLM input sent — generating fix
+2026-05-02 22:22:16,408 — [Agent3] LLM output:
+FIX:
+Add validation to sanitize special characters before processing login.
+
+CODE:
+if not password.isalnum():
+    raise ValueError("Invalid characters in password")
+
+2026-05-02 22:22:16,409 — [Reporter Agent] Started
+2026-05-02 22:22:16,409 — [Reporter Agent] Report saved to reports/bug_report_222216.md
+2026-05-02 22:22:54,661 — [Agent1] Tool call: read_bug_report('sample_bug.txt')
+2026-05-02 22:22:54,661 — [Agent1] Tool output: 584 characters read
+2026-05-02 22:22:54,661 — [Agent1] LLM input sent — classifying bug report
+2026-05-02 22:22:54,661 — [Agent1] LLM output:
+SEVERITY: critical
+TITLE: App crashes on login with special characters in password
+COMPONENT: Authentication Module
+REPORTED_BY: Ashan Fernando
+2026-05-02 22:22:54,662 — [Agent2] Starting analysis for: App crashes on login with special characters in password
+2026-05-02 22:22:54,662 — [Agent2] Tool call: read_code_file('sample_code/buggy_app.py')
+2026-05-02 22:22:54,662 — [Agent2] Tool output: 824 characters read
+2026-05-02 22:22:54,662 — [Agent2] LLM input sent — analysing source code
+2026-05-02 22:22:54,662 — [Agent2] LLM output:
+ROOT_CAUSE: Crash occurs due to missing validation for special characters in password input (line 12)
+BUGGY_LINES: 12
+CONFIDENCE: high
+2026-05-02 22:22:54,663 — [Agent3] Received root cause: Crash occurs due to missing validation for special characters in password input (line 12)
+2026-05-02 22:22:54,663 — [Agent3] Tool call: search_local_docs('Crash occurs due to missing validation for special characters in password input (line 12)')
+2026-05-02 22:22:54,814 — [Agent3] Tool output: 0 matches found
+2026-05-02 22:22:54,815 — [Agent3] LLM input sent — generating fix
+2026-05-02 22:22:54,815 — [Agent3] LLM output:
+FIX:
+Add validation to sanitize special characters before processing login.
+
+CODE:
+if not password.isalnum():
+    raise ValueError("Invalid characters in password")
+
+2026-05-02 22:22:54,815 — [Reporter Agent] Started
+2026-05-02 22:22:54,816 — [Reporter Agent] Report saved to reports/bug_report_222254.md
+2026-05-02 22:31:30,457 — [Agent1] Tool call: read_bug_report('sample_bug.txt')
+2026-05-02 22:31:30,457 — [Agent1] Tool output: 584 characters read
+2026-05-02 22:31:30,457 — [Agent1] LLM input sent — classifying bug report
+2026-05-02 22:31:30,458 — [Agent1] LLM output:
+SEVERITY: critical
+TITLE: App crashes on login with special characters in password
+COMPONENT: Authentication Module
+REPORTED_BY: Ashan Fernando
+2026-05-02 22:31:30,458 — [Agent2] Starting analysis for: App crashes on login with special characters in password
+2026-05-02 22:31:30,458 — [Agent2] Tool call: read_code_file('sample_code/buggy_app.py')
+2026-05-02 22:31:30,459 — [Agent2] Tool output: 824 characters read
+2026-05-02 22:31:30,459 — [Agent2] LLM input sent — analysing source code
+2026-05-02 22:31:30,459 — [Agent2] LLM output:
+ROOT_CAUSE: Crash occurs due to missing validation for special characters in password input (line 12)
+BUGGY_LINES: 12
+CONFIDENCE: high
+2026-05-02 22:31:30,459 — [Agent3] Received root cause: Crash occurs due to missing validation for special characters in password input (line 12)
+2026-05-02 22:31:30,459 — [Agent3] Tool call: search_local_docs('Crash occurs due to missing validation for special characters in password input (line 12)')
+2026-05-02 22:31:30,597 — [Agent3] Tool output: 0 matches found
+2026-05-02 22:31:30,597 — [Agent3] LLM input sent — generating fix
+2026-05-02 22:31:30,597 — [Agent3] LLM output:
+FIX:
+Add validation to sanitize special characters before processing login.
+
+CODE:
+if not password.isalnum():
+    raise ValueError("Invalid characters in password")
+
+2026-05-02 22:31:30,597 — [Reporter Agent] Started
+2026-05-02 22:31:30,598 — [Reporter Agent] Report saved to reports/bug_report_223130.md
+2026-05-02 22:33:03,752 — [Agent1] Tool call: read_bug_report('sample_bug.txt')
+2026-05-02 22:33:03,753 — [Agent1] Tool output: 584 characters read
+2026-05-02 22:33:03,753 — [Agent1] LLM input sent — classifying bug report
+2026-05-02 22:33:03,753 — [Agent1] LLM output:
+SEVERITY: critical
+TITLE: App crashes on login with special characters in password
+COMPONENT: Authentication Module
+REPORTED_BY: Ashan Fernando
+2026-05-02 22:33:03,753 — [Agent2] Starting analysis for: App crashes on login with special characters in password
+2026-05-02 22:33:03,753 — [Agent2] Tool call: read_code_file('sample_code/buggy_app.py')
+2026-05-02 22:33:03,754 — [Agent2] Tool output: 824 characters read
+2026-05-02 22:33:03,754 — [Agent2] LLM input sent — analysing source code
+2026-05-02 22:33:03,754 — [Agent2] LLM output:
+ROOT_CAUSE: Crash occurs due to missing validation for special characters in password input (line 12)
+BUGGY_LINES: 12
+CONFIDENCE: high
+2026-05-02 22:33:03,754 — [Agent3] Received root cause: Crash occurs due to missing validation for special characters in password input (line 12)
+2026-05-02 22:33:03,754 — [Agent3] Tool call: search_local_docs('Crash occurs due to missing validation for special characters in password input (line 12)')
+2026-05-02 22:33:03,886 — [Agent3] Tool output: 0 matches found
+2026-05-02 22:33:03,886 — [Agent3] LLM input sent — generating fix
+2026-05-02 22:33:03,886 — [Agent3] LLM output:
+FIX:
+Add validation to sanitize special characters before processing login.
+
+CODE:
+if not password.isalnum():
+    raise ValueError("Invalid characters in password")
+
+2026-05-02 22:33:03,887 — [Reporter Agent] Started
+2026-05-02 22:33:03,888 — [Reporter Agent] Report saved to reports/bug_report_223303.md
+2026-05-02 22:33:53,929 — [Agent1] Tool call: read_bug_report('sample_bug.txt')
+2026-05-02 22:33:53,930 — [Agent1] Tool output: 584 characters read
+2026-05-02 22:33:53,930 — [Agent1] LLM input sent — classifying bug report
+2026-05-02 22:33:53,930 — [Agent1] LLM output:
+SEVERITY: critical
+TITLE: App crashes on login with special characters in password
+COMPONENT: Authentication Module
+REPORTED_BY: Ashan Fernando
+2026-05-02 22:33:53,930 — [Agent2] Starting analysis for: App crashes on login with special characters in password
+2026-05-02 22:33:53,931 — [Agent2] Tool call: read_code_file('sample_code/buggy_app.py')
+2026-05-02 22:33:53,931 — [Agent2] Tool output: 824 characters read
+2026-05-02 22:33:53,931 — [Agent2] LLM input sent — analysing source code
+2026-05-02 22:33:53,931 — [Agent2] LLM output:
+ROOT_CAUSE: Crash occurs due to missing validation for special characters in password input (line 12)
+BUGGY_LINES: 12
+CONFIDENCE: high
+2026-05-02 22:33:53,931 — [Agent3] Received root cause: Crash occurs due to missing validation for special characters in password input (line 12)
+2026-05-02 22:33:53,932 — [Agent3] Tool call: search_local_docs('Crash occurs due to missing validation for special characters in password input (line 12)')
+2026-05-02 22:33:54,173 — [Agent3] Tool output: 0 matches found
+2026-05-02 22:33:54,173 — [Agent3] LLM input sent — generating fix
+2026-05-02 22:33:54,173 — [Agent3] LLM output:
+FIX:
+Add validation to sanitize special characters before processing login.
+
+CODE:
+if not password.isalnum():
+    raise ValueError("Invalid characters in password")
+
+2026-05-02 22:33:54,174 — [Reporter Agent] Started
+2026-05-02 22:33:54,174 — [Reporter Agent] Report saved to reports/bug_report_223354.md
+2026-05-02 22:34:08,799 — [Agent1] Tool call: read_bug_report('sample_bug.txt')
+2026-05-02 22:34:08,799 — [Agent1] Tool output: 584 characters read
+2026-05-02 22:34:08,800 — [Agent1] LLM input sent — classifying bug report
+2026-05-02 22:34:08,800 — [Agent1] LLM output:
+SEVERITY: critical
+TITLE: App crashes on login with special characters in password
+COMPONENT: Authentication Module
+REPORTED_BY: Ashan Fernando
+2026-05-02 22:34:08,800 — [Agent2] Starting analysis for: App crashes on login with special characters in password
+2026-05-02 22:34:08,800 — [Agent2] Tool call: read_code_file('sample_code/buggy_app.py')
+2026-05-02 22:34:08,800 — [Agent2] Tool output: 824 characters read
+2026-05-02 22:34:08,800 — [Agent2] LLM input sent — analysing source code
+2026-05-02 22:34:08,801 — [Agent2] LLM output:
+ROOT_CAUSE: Crash occurs due to missing validation for special characters in password input (line 12)
+BUGGY_LINES: 12
+CONFIDENCE: high
+2026-05-02 22:34:08,801 — [Agent3] Received root cause: Crash occurs due to missing validation for special characters in password input (line 12)
+2026-05-02 22:34:08,801 — [Agent3] Tool call: search_local_docs('Crash occurs due to missing validation for special characters in password input (line 12)')
+2026-05-02 22:34:08,941 — [Agent3] Tool output: 0 matches found
+2026-05-02 22:34:08,941 — [Agent3] LLM input sent — generating fix
+2026-05-02 22:34:08,941 — [Agent3] LLM output:
+FIX:
+Add validation to sanitize special characters before processing login.
+
+CODE:
+if not password.isalnum():
+    raise ValueError("Invalid characters in password")
+
+2026-05-02 22:34:08,941 — [Reporter Agent] Started
+2026-05-02 22:34:08,942 — [Reporter Agent] Report saved to reports/bug_report_223408.md

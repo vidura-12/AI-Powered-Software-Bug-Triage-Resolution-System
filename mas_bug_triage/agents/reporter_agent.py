@@ -1,5 +1,6 @@
 import logging
 import datetime
+from langchain_ollama import OllamaLLM   # ✅ ADDED
 from tools.write_report_tool import write_report
 
 logging.basicConfig(
@@ -13,12 +14,36 @@ def run_reporter_agent(state: dict) -> dict:
 
     print("\n📄 Generating final AI report...")
 
-    bug_report = state.get("bug_report", "N/A")
+    # 🔥 FIXED: Correct state keys (ONLY CHANGE)
+    bug_report = state.get("bug_title", "N/A")
     severity = state.get("severity", "N/A")
-    analysis = state.get("analysis", "N/A")
-    fix = state.get("fix_suggestion", "N/A")
-    file_path = state.get("file_path", "N/A")
+    analysis = state.get("root_cause", "N/A")
+    fix = state.get("suggested_fix", "N/A")
+    file_path = state.get("buggy_lines", "N/A")
 
+    # ✅ ADDED: Initialize LLM
+    llm = OllamaLLM(model="phi3")
+
+    # ✅ ADDED: Prompt for LLM (kept simple)
+    prompt = f"""
+Generate a structured bug report with:
+- Summary
+- Severity explanation
+- Root cause
+- Fix recommendation
+- Conclusion
+
+Bug: {bug_report}
+Severity: {severity}
+Analysis: {analysis}
+Fix: {fix}
+File: {file_path}
+"""
+
+    # ✅ ADDED: Get AI-generated content
+    ai_generated = llm.invoke(prompt)
+
+    # ❗ KEEP YOUR EXISTING STRUCTURE (no removal)
     ai_report = f"""
 Summary:
 The system encountered the following issue: {bug_report}
@@ -35,6 +60,9 @@ Recommended Fix:
 Conclusion:
 This issue should be resolved promptly.
 """
+
+    # ✅ ADDED: Append real AI output (without breaking your format)
+    ai_report += f"\n\n---\n\n🔍 AI Enhanced Insights:\n{ai_generated}\n"
 
     priority = "HIGH" if severity.upper() == "CRITICAL" else "MEDIUM"
     confidence = "85%"

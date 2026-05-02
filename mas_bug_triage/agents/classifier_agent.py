@@ -3,7 +3,6 @@
 import logging
 import datetime
 from langchain_ollama import OllamaLLM
-from matplotlib.pyplot import title
 from tools.read_bug_report_tool import read_bug_report
 
 logging.basicConfig(
@@ -41,17 +40,17 @@ You are a senior software QA engineer. Your ONLY job is to analyse a bug report
 and return a structured classification. You must be precise and never guess.
 
 Rules:
-- Severity is CRITICAL if the app crashes, data is lost, or security is breached.
-- Severity is MAJOR if a core feature is broken but the app still runs.
+- Severity is CRITICAL if the application stops functioning, records are lost, or access is compromised.
+- Severity is MAJOR if a core feature is non-functional but the application still runs.
 - Severity is MINOR if it is a UI glitch, typo, or minor inconvenience.
 - Extract the title, affected component, and reporter name exactly as written.
 - If a field is not mentioned, write "unknown".
 - Respond ONLY in this exact format, nothing else:
 
 SEVERITY: <critical|major|minor>
-TITLE: <one line title>
-COMPONENT: <affected component>
-REPORTED_BY: <name or unknown>
+TITLE: <title here>
+COMPONENT: <component here>
+REPORTED_BY: <name here>
 """
 
     user_message = f"Classify this bug report:\n\n{raw_text}"

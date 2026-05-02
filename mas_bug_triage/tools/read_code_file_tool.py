@@ -14,7 +14,7 @@ def read_code_file(path: str) -> str:
     Args:
         path (str): The absolute or relative file path to the source
                     code file. Supports .py, .js, .ts, .jsx, .tsx
-
+   
     Returns:
         str: The full content of the file with line numbers in the
              format "   1 | <code line>". Returns an error message

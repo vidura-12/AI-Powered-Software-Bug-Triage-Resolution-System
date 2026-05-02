@@ -10,10 +10,52 @@ class OllamaLLM:
         # UNIQUE: "structured classification"
         # -------------------------------
         if "structured classification" in p:
-            return """SEVERITY: critical
-TITLE: App crashes on login with special characters in password
-COMPONENT: Authentication Module
-REPORTED_BY: Ashan Fernando"""
+
+            # Detect severity from actual prompt content
+            if any(word in p for word in [
+                "crash", "crashes", "data loss", "deleted", "wipe",
+                "security breach", "permanently", "500 error",
+                "unhandled exception", "security"
+            ]):
+                severity = "critical"
+            elif any(word in p for word in [
+                "fails", "timeout", "not working", "cannot",
+                "broken", "throws", "error", "exception"
+            ]):
+                severity = "major"
+            else:
+                severity = "minor"
+
+            # Extract title
+            title = "unknown"
+            for line in prompt.splitlines():
+                line = line.strip()
+                if line.lower().startswith("title:"):
+                    title = line.split(":", 1)[1].strip()
+                    break
+
+            # Extract component
+            component = "unknown"
+            for line in prompt.splitlines():
+                line = line.strip()
+                if line.lower().startswith("component:"):
+                    component = line.split(":", 1)[1].strip()
+                    break
+
+            # Extract reporter
+            reported_by = "unknown"
+            for line in prompt.splitlines():
+                line = line.strip()
+                if line.lower().startswith("reported by:"):
+                    reported_by = line.split(":", 1)[1].strip()
+                    break
+
+            return (
+                f"SEVERITY: {severity}\n"
+                f"TITLE: {title}\n"
+                f"COMPONENT: {component}\n"
+                f"REPORTED_BY: {reported_by}\n"
+            )
 
         # -------------------------------
         # Agent 2: Analyser

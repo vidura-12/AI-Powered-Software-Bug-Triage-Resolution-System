@@ -10,11 +10,7 @@ venv/
 .env/
 .venv/
 
-# ----------------------
-# Logs
-# ----------------------
-logs/
-*.log
+
 
 # Ignore generated reports
 reports/
